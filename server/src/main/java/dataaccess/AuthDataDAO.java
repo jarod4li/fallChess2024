@@ -15,12 +15,17 @@ public class AuthDataDAO implements AuthDAO {
 
   @Override
   public AuthData findToken(String token) throws DataAccessException {
+    for (AuthData authToken:tokenList) {
+      if (authToken.getToken().equals(token)){
+        return authToken;
+      }
+    }
     return null;
   }
 
   @Override
   public void removeAuthToken(AuthData token) throws DataAccessException {
-
+    tokenList.remove(token);
   }
 
   public void clearAllAuth() {
