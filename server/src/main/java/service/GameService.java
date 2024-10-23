@@ -37,6 +37,11 @@ public class GameService {
     }
     String playerColor = currGame.getPlayerColor();
 
+    // Add this check for null or empty player color
+    if (playerColor == null || playerColor.isEmpty()) {
+      throw new DataAccessException("Error: bad request");
+    }
+
     if (auth.findToken(token) == null) {
       throw new DataAccessException("Error: unauthorized");
     }
