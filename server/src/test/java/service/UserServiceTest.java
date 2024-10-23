@@ -1,10 +1,9 @@
-package serviceTests;
+package service;
 
 import dataaccess.*;
 import model.AuthData;
 import model.UserData;
 import org.junit.jupiter.api.BeforeEach;
-import service.UserService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import java.rmi.ServerException;

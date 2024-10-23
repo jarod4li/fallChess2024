@@ -1,4 +1,4 @@
-package serviceTests;
+package service;
 
 import dataaccess.*;
 import model.AuthData;
@@ -7,8 +7,6 @@ import model.UserData;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import service.GameService;
-import service.UserService;
 
 import java.util.ArrayList;
 
