@@ -5,6 +5,16 @@ import model.GameData;
 import java.util.ArrayList;
 
 public class SQLGameDAO implements GameDAO{
+  private static final String[] GAMES_TABLE_QUERY = {
+          "CREATE TABLE IF NOT EXISTS games (" +
+                  "gameName VARCHAR(255) NOT NULL, " +
+                  "gameID VARCHAR(255) PRIMARY KEY, " +
+                  "whiteUsername VARCHAR(255), " +
+                  "blackUsername VARCHAR(255), " +
+                  "game TEXT NOT NULL" +
+                  ")"
+  };
+
   @Override
   public void addGame(GameData newGame) throws DataAccessException {
 
