@@ -2,7 +2,14 @@ package dataaccess;
 
 import model.AuthData;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+
 public class SQLAuthDAO implements AuthDAO{
+  public SQLAuthDAO() throws DataAccessException {
+    configureDatabase();
+  }
   private static final String[] AUTH_TABLE_QUERY = {
           "CREATE TABLE IF NOT EXISTS authtokens (" +
                   "token VARCHAR(255) NOT NULL, " +
@@ -11,6 +18,19 @@ public class SQLAuthDAO implements AuthDAO{
                   ")"
   };
 
+  private void configureDatabase() throws DataAccessException {
+    DatabaseManager.createDatabase();
+    try (var conn = DatabaseManager.getConnection()) {
+      for (var statement : AUTH_TABLE_QUERY) {
+        try (var preparedStatement = conn.prepareStatement(statement)) {
+          preparedStatement.executeUpdate();
+        }
+      }
+    } catch (SQLException ex) {
+      throw new DataAccessException(String.format("Unable to configure database: %s", ex.getMessage()));
+    }
+  }
+
   @Override
   public void clearAllAuth() throws DataAccessException {
 
@@ -18,7 +38,16 @@ public class SQLAuthDAO implements AuthDAO{
 
   @Override
   public AuthData addAuthToken(String username) throws DataAccessException {
-    return null;
+    AuthData newUser = new AuthData(username);
+    try (Connection conn = DatabaseManager.getConnection();
+         PreparedStatement statement = conn.prepareStatement("INSERT INTO authtokens (username, token) VALUES (?, ?)")) {
+      statement.setString(1, newUser.getUsername());
+      statement.setString(2, newUser.getToken());
+      statement.executeUpdate();
+      return newUser;
+    } catch (SQLException e) {
+      throw new DataAccessException("Error: " + e.getMessage());
+    }
   }
 
   @Override
