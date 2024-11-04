@@ -22,19 +22,31 @@ public class Server {
     public int run(int desiredPort) {
         Spark.port(desiredPort);
 
-        UserDAO user = new UserDataDAO();
-        AuthDAO auth = new AuthDataDAO();
-        GameDAO game = new GameDataDAO();
-        userService = new UserService(user, auth);
-        gameService = new GameService(game, auth);
-        clearService = new ClearService(user, game, auth);
+        try {
+            UserDAO user = new SQLUserDAO();
+            AuthDAO auth = new SQLAuthDAO();
+            GameDAO game = new SQLGameDAO();
+            userService = new UserService(user, auth);
+            gameService = new GameService(game, auth);
+            clearService = new ClearService(user, game, auth);
+
+        }
+        catch (DataAccessException e){
+            UserDAO user = new UserDataDAO();
+            AuthDAO auth = new AuthDataDAO();
+            GameDAO game = new GameDataDAO();
+            userService = new UserService(user, auth);
+            gameService = new GameService(game, auth);
+            clearService = new ClearService(user, game, auth);
+        }
+
 
         Spark.staticFiles.location("web");
         Spark.post("/user", this::registerHandler);
         Spark.post("/session", this::loginHandler);
-        Spark.post("/game", this::createGameHandler);
-        Spark.put("/game", this::joinGameHandler);
-        Spark.get("/game", this::listGamesHandler);
+        Spark.post(("/game"), this::createGameHandler);
+        Spark.put(("/game"), this::joinGameHandler);
+        Spark.get(("/game"), this::listGamesHandler);
         Spark.delete("/db", this::clearApplicationHandler);
         Spark.delete("/session", this::logoutHandler);
         Spark.awaitInitialization();
