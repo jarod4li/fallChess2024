@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 public class Bishop implements PieceMovesCalculator{
+  //added notes
 
   public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition position){
 
